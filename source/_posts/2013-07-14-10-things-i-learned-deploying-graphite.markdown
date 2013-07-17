@@ -6,7 +6,11 @@ comments: true
 published: false
 categories: graphite
 ---
-Graphite and I have a long, sordid history.  You might even say "we go way back."  It all started when reading [the amazing blog post introducing StatsD by Etsy's engineering team](http://codeascraft.com/2011/02/15/measure-anything-measure-everything/).  If you haven't read it yet, I recommend it as it is a nice illustration of why you would want to install Graphite.  If you've read it already, you probably have been meaning to get it going but have never gotten around to it.
+
+* list element with functor item
+{:toc}
+
+Graphite and I have a long, sordid history.  You might even say "we go way back."  It all started when reading [the amazing blog post introducing StatsD by Etsy's engineering team](http://codeascraft.com/2011/02/15/measure-anything-measure-everything/).  If you haven't read it yet, I recommend it as it is a nice illustration of why you would want to install Graphite.  If you've read it already, you probably have been meaning to get Graphite going but haven't gotten around to it.
 
 {% img center /images/graphite/powerplant.jpg Admit it, you wish you worked here %}
 
@@ -30,7 +34,7 @@ I have tried and failed a few times getting Graphite into a state where it could
 
 ## Why is deploying Graphite a huge pain in the ass?
 
-So glad you asked.  I think the main reason is that *django is a pain in the ass to deploy*. After noodling around with this for awhile, I figured out a pretty good way to deploy Graphite, and have made [a puppet module](https://github.com/kevin1024/graphite-puppet) for installing Graphite on a RHEL6 or Centos6 server.
+I think the main reason is that *django is a pain in the ass to deploy*. After noodling around with this for awhile, I figured out a pretty good way to deploy Graphite, and have made [a puppet module](https://github.com/kevin1024/graphite-puppet) for installing Graphite on a RHEL6 or Centos6 server.
 
 The reason this works so well is that the EPEL repository (if you use Centos or RHEL you pretty much *have* to install EPEL) has, awesomely, packaged Graphite.  It's actually in 3 packages: `python-whisper`, `python-carbon`, and `graphite-web`.  The packages make a few assumptions, and after a bit of trial-and-error I was able to figure out what they were expecting.
 
@@ -38,6 +42,7 @@ The reason this works so well is that the EPEL repository (if you use Centos or 
  * Graphite and Carbon expect their config files to end up in /etc/
  * You have to run `manage.py syncdb` after configuring the database in /etc/.  This database is just used for a few things on the front-end, not actual graph data, so you don't have to worry too much about using a real database.  I just used sqlite.
  * Apache will be configured to serve Graphite on port 80
+ * You also need memcached running for some reason
 
 You will probably also want to add some HTTP basic auth so creepers don't start creeping your graphs.  The puppet module will do that for you.
 
@@ -55,12 +60,64 @@ The `munin-node` daemon that runs on all your servers is incredibly lightweight,
 Graphite lets you manipulate your graphs in ways I never dreamed of when I  was using Munin.  You can run functions on your graphs to change the time scale, summarize the data, and mash together several graphs into a frankengraph *at will*.
 
 
-# 2. Make sure that your StatsD flush interval is the same as your graphite interval
-# 3. The difference between statsd_counts and statsd
-# 4. Turning off legacy namespacing
-# 5. Setting up retention
-# 6. Aggregating data: WTF
-# 7. hit count versus summarize
-# 8. Holy crap there are a lot of StatsDs
-# 9. Holy crap there are a lot of Graphite Dashboards
-# 10. Graphite is amazing
+# 3. There must be 50 ways to feed your Graphite
+
+Once you manage to get Graphite running, there are a lot of great ways to get more data into it.  Feeding more and more of data into Graphite became a bit of an obsession for me.
+
+## statsd
+StatsD is the big daddy that started it all, and it works great.  It's written in nodejs, so you'll need that running on your server.  The key thing that StatsD is doing is listening to UDP packets (see the "Why UDP" section in the [Etsy blog post](http://codeascraft.com/2011/02/15/measure-anything-measure-everything/) for more on this) and batching them up before sending the statistics into Graphite.  I use it to send all my application-level statistics.  
+
+Also, for some reason there are a zillion client libraries for StatsD. For Python, I like [this one](https://github.com/jsocol/pystatsd) (`pip install statsd`)
+
+## collectd
+Collectd is a daemon that runs on each of your servers and reports back info to Graphite.  It comes with a bunch of plugins and [there are a zillion more for specialized servers](http://collectd.org/wiki/index.php/Table_of_Plugins) that help you track more statistics.  Collectd is in EPEL, but it's a pretty old version.  Also, Collectd doesn't talk directly to Graphite.  The best way I found to set it up is with bucky
+
+## bucky
+Bucky is a Python daemon that listens for both StatsD *and* collectd packets, and sends them to Graphite.  So it's a replacement for StatsD but it also knows how to use Collectd metrics.  It is pretty great and easy to deploy.
+
+## logster
+Etsy also has this [logster](https://github.com/etsy/logster) project which is a Python script that can tail your log files and generate metrics to send back to Graphite.  I haven't actually tried it but it looks interesting.  They don't seem to have many [parsers](https://github.com/etsy/logster/tree/master/logster/parsers) though so I think you'll have to implement some of your own.
+
+There are [many more](https://graphite.readthedocs.org/en/latest/tools.html) ways to feed Graphite in the docs.
+
+# 4. Make sure that your StatsD flush interval is at least as long as your Graphite interval
+
+This is probably the most important lesson I learned.
+
+What the heck is a StatsD flush interval?  Remember how I said that StatsD batches up sending statistics to Graphite?  Well, you can configure how often StatsD sends those batches.  By default the flush interval is 10 seconds.  So every 10 seconds, StatsD is sends a batch of metrics to Graphite.
+
+What happens if you start sending stats faster than Graphite's highest resolution?  Graphite will start dropping metrics.
+
+Let's say you're tracking clicks on a button that says "Kevin is Awesome".  This is a very tempting button, so people click it about 5 times a second.
+
+StatsD starts batching things: 10 seconds of people mashing the button means that each batch will have 50 clicks in it.
+
+However, let's say that Graphite's interval is set to a minute.  That means that during that minute, we will have sent 6 batches of 50 clicks for a total of 300 clicks.  However, Graphite will only record one of those batches, so it will only record 50 clicks instead of 100.
+
+# 5. Turning off legacy namespacing
+
+Once you start exploring the data sent into Graphite, you'll probably notice that your counter values are stored twice.  Depending on your version of graphite and whether you have turned off something called `legacyNamespace`, they will either be in a folder called "statsd_counts" as well as in the "stats" folder, or they will be the statsd folder with the rest of the stats.
+
+I think it makes more sense to have all the statsd metrics contained in the "statsd" folder.  In order to do this, you have to set the `legacyNamespace` configuration option to false (it defaults to true).
+
+For the rest of this article, I'll assume that you have turned off legacy namespacing and refer to the counter values with their non-legacy names.
+
+But why are there two versions of the same counter stats, each with different values?  That brings us to the next lesson I learned:
+
+# 6. The difference between yourstat.count and yourstat.rate
+
+In StatsD, counters keep track of events that happen, as opposed to gauges, which keep track of a value that fluctuates.  There are really two interesting things about counts that we might want to graph.  
+
+  * How many times did this thing happen?
+  * At what rate is this thing happening?
+
+Yourstat.count keeps
+
+# 7. Setting up retention
+
+# 8. Aggregating data: WTF
+
+# 9. hit count versus summarize
+
+# 10. Holy crap there are a lot of Graphite Dashboards
+
