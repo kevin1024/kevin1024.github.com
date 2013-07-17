@@ -1,0 +1,60 @@
+<script src="http://cloud.github.com/downloads/processing-js/processing-js/processing-1.4.1.min.js" type="text/javascript"></script>
+
+<style>
+.animation_controls {
+  display: block;
+  float: left;
+  text-align: left;
+  width: 215px;
+  margin-left: 10px;
+}
+.animation_controls ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+</style>
+
+<div id="animation"></div>
+<div class="animation_controls">
+  <ul>
+  <li>Event Generation Rate: <input id="eventRate" value="100"></input> per second</li>
+  <li>StatsD Flush Rate: <input id="statsdFlushRate" value="10"> seconds</input></li>
+  <li>Graphite Storage Interval: <input id="graphiteStorageInterval" value="10"> seconds</input></li>
+  </ul>
+  <button id="update">update</button>
+  <button id="reset">reset</button>
+</div>
+<div style="clear:both"></div>
+
+<script id="mysketch" type="application/processing">
+{% include widgets/graphite.pde %}
+</script>
+
+<script type="text/javascript">
+var statsdFlushRate = 10;
+var graphiteStorageInterval = 10;
+var eventRate = 100;
+
+$(document).ready(function() {
+    var init = function() {
+        $('#animation').html('<canvas id="mycanvas" width="400" height="400" style="float:left"></canvas>');
+        var c = document.getElementById("mycanvas");
+        var s = document.getElementById("mysketch").text;
+        console.log(c);
+        console.log(s);
+        p = new Processing(c, s);
+    }
+
+    $('#update').click(function(event) {
+        eventRate = parseInt($('#eventRate').val());
+        graphiteStorageInterval = parseInt($('#graphiteStorageInterval').val());
+        statsdFlushRate = parseInt($('#statsdFlushRate').val()); 
+    });
+    $('#reset').click(function() {
+       init();
+    });
+    init();
+});
+</script>

@@ -94,6 +94,8 @@ StatsD starts batching things: 10 seconds of people mashing the button means tha
 
 However, let's say that Graphite's interval is set to a minute.  That means that during that minute, we will have sent 6 batches of 50 clicks for a total of 300 clicks.  However, Graphite will only record one of those batches, so it will only record 50 clicks instead of 100.
 
+{% include widgets/graphite.html %}
+
 # 5. Turning off legacy namespacing
 
 Once you start exploring the data sent into Graphite, you'll probably notice that your counter values are stored twice.  Depending on your version of graphite and whether you have turned off something called `legacyNamespace`, they will either be in a folder called "statsd_counts" as well as in the "stats" folder, or they will be the statsd folder with the rest of the stats.
