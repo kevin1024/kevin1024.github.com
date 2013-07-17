@@ -38,7 +38,8 @@
 					<ul>
 						<li><a href="{{ root_url }}/">Blog</a></li>
 						<li><a href="{{ root_url }}/blog/archives">Archives</a></li>
-						<li><a href="http://www.github.com/kevin1024/">My Github</a></li>
+						<li><a href="http://www.github.com/kevin1024/">Github</a></li>
+            <li><a href="{{ root_url }}/talks/">Talks</a></li>
             <li><a href="{{ root_url }}/about/">About</a></li>
 					<ul>
 				</div> <!-- // .navi -->
@@ -59,7 +60,9 @@
 			
 			// Add the image's title attribute as a caption
 			$('p:has(img)').append(function () {
-				return '<div class="caption">' + $('img', this).attr('title') + '</div>';
+        if ($('img', this).attr('title')) {
+				  return '<div class="caption">' + $('img', this).attr('title') + '</div>';
+        }
 			});
 			
 			// Prettify code
