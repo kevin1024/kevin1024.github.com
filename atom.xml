@@ -4,7 +4,7 @@
 	<title><![CDATA[Kevin McCarthy]]></title>
 	<link href="http://kevin1024.github.io/atom.xml" rel="self"/>
 	<link href="http://kevin1024.github.io/"/>
-	<updated>2013-07-17T22:42:53-10:00</updated>
+	<updated>2013-07-17T22:50:26-10:00</updated>
 	<id>http://kevin1024.github.io/</id>
 	<author>
 		<name><![CDATA[Kevin McCarthy]]></name>
@@ -39,7 +39,7 @@
   <li><a href="#holy-crap-there-are-a-lot-of-graphite-dashboards">10. Holy crap there are a lot of Graphite Dashboards</a></li>
 </ul>
 
-<p>Graphite and I have a long, sordid history.  You might even say “we go way back.”  It all started when reading <a href="http://codeascraft.com/2011/02/15/measure-anything-measure-everything/">the amazing blog post introducing StatsD by Etsy’s engineering team</a>.  If you haven’t read it yet, I recommend it as it is a nice illustration of why you would want to install Graphite.  If you’ve read it already, you probably have been meaning to get Graphite going but haven’t gotten around to it.</p>
+<p>Graphite and I have a long history.  It all started when reading <a href="http://codeascraft.com/2011/02/15/measure-anything-measure-everything/">the amazing blog post introducing StatsD by Etsy’s engineering team</a>.  If you haven’t read it yet, I recommend it as it is a nice illustration of why you would want to install Graphite.  If you’ve read it already, you probably have been meaning to get Graphite going but haven’t gotten around to it.</p>
 
 <p><img class="center" src="http://kevin1024.github.io/images/graphite/powerplant.jpg" title="Admit it, you wish you worked here" /></p>
 
