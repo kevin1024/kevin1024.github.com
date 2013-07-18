@@ -21,7 +21,7 @@ Here is what Graphite looks like:
 
 Having quick access to all these statistics helps you be more productive.  But there is quite a bit of work go get off the ground.  That brings me to item #1:
 
-# 1. Deploying Graphite is a huge pain in the ass
+# 1. Deploying Graphite is a pain in the ass
 
 Graphite is such a strange beast.  It was developed at Orbitz (maybe to track how many airlines still give out free peanuts?) and is open-sourced under the Apache license.  It is written in Python and is actually made up of 3 main parts:
 
@@ -31,7 +31,7 @@ Graphite is such a strange beast.  It was developed at Orbitz (maybe to track ho
 
 I have tried and failed a few times getting Graphite into a state where it could be deployed automatically, and I usually gave up going "wow this tool is hard to deploy, and Munin is good enough anyway" so I kept giving up.  
 
-## Why is deploying Graphite a huge pain in the ass?
+## Why is deploying Graphite a pain in the ass?
 
 I think the main reason is that *django is a pain in the ass to deploy*. After noodling around with this for awhile, I figured out a pretty good way to deploy Graphite, and have made [a puppet module](https://github.com/kevin1024/graphite-puppet) for installing Graphite on a RHEL6 or Centos6 server.
 
