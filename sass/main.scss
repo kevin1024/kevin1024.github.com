@@ -210,18 +210,7 @@ pre {
 	line-height: $code-block-line-height;
 	background-color: $code-background-color;
 	overflow: hidden;
-	
-	.clip-btn {
-		position: absolute;
-		top: 0px;
-		right: 1em;
-		font-size: 0.8em;
-		text-decoration: underline;
-		
-		@media only screen and (max-width: 1000) {
-			display: none;
-			}
-		}
+
 	}
 	
 code {

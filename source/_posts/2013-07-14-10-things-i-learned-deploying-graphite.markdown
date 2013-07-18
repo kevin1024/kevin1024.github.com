@@ -14,7 +14,7 @@ Graphite and I have a long, sordid history.  You might even say "we go way back.
 
 {% img center /images/graphite/powerplant.jpg Admit it, you wish you worked here %}
 
-Basically, what Graphite does is makes you feel like the badass engineer working on some kind of huge industrial process that you wish you were!  Why should the nuclear engineers get the awesome dashboards:
+Basically, what Graphite does is makes you feel like the badass engineer working on a huge project, intimately familiar with the inner workings of *everything*.  Why should nuclear engineers be the only ones with awesome control panels?
 
 Here is what Graphite looks like:
 
