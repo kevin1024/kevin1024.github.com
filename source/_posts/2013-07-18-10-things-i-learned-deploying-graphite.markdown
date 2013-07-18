@@ -1,9 +1,8 @@
 ---
 layout: post
 title: "10 Things I Learned Deploying Graphite"
-date: 2013-07-14 17:04
+date: 2013-07-18 17:04
 comments: true
-published: false
 categories: graphite
 ---
 
@@ -28,7 +27,7 @@ Graphite is such a strange beast.  It was developed at Orbitz (maybe to track ho
 
 1. Graphite-web: A Django project that provides a GUI for graphite.  This is what you see when you visit a Graphite install in your browser.  It also has an admin area that lets you set up users that are allowed to create and save graphs.  You can deploy this like any other Django app via wsgi.
 2. Carbon: Carbon is a daemon that runs constantly in the background.  Its main job is to take in statistics from the network and write them to disk.  It also does something both complicated and fascinating called "aggregation" which I will explore later.  Carbon will also be replaced eventually by its successor, [Ceres](https://github.com/graphite-project/ceres)
-3. Whisper: Whisper is a time-series database file format.  It doesn't actually run as a server or anything, it's just a standard format for storing time-series data.  These databases are a fixed size, and once the data gets old it falls off the other end.  Whisper is a replacment for RRDTool, which I will talk about later.
+3. Whisper: Whisper is a time-series database file format.  It doesn't actually run as a server or anything, it's just a standard format for storing time-series data.  These databases are a fixed size, and once the data gets old it falls off the other end.  Whisper is a replacement for RRDTool, which I will talk about later.
 
 I have tried and failed a few times getting Graphite into a state where it could be deployed automatically, and I usually gave up going "wow this tool is hard to deploy, and Munin is good enough anyway" so I kept giving up.  
 
