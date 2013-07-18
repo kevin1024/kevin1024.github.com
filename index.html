@@ -56,7 +56,7 @@
 	</header>
 		<div class="content">
 			<ul id="markdown-toc">
-  <li><a href="#deploying-graphite-is-a-huge-pain-in-the-ass">1. Deploying Graphite is a huge pain in the ass</a></li>
+  <li><a href="#deploying-graphite-is-a-pain-in-the-ass">1. Deploying Graphite is a pain in the ass</a></li>
   <li><a href="#graphite-is-more-powerful-than-munin">2. Graphite is more powerful than Munin</a></li>
   <li><a href="#there-must-be-50-ways-to-feed-your-graphite">3. There must be 50 ways to feed your Graphite</a></li>
   <li><a href="#make-sure-that-your-statsd-flush-interval-is-at-least-as-long-as-your-graphite-interval">4. Make sure that your StatsD flush interval is at least as long as your Graphite interval</a></li>
@@ -80,7 +80,7 @@
 
 <p>Having quick access to all these statistics helps you be more productive.  But there is quite a bit of work go get off the ground.  That brings me to item #1:</p>
 
-<h1 id="deploying-graphite-is-a-huge-pain-in-the-ass">1. Deploying Graphite is a huge pain in the ass</h1>
+<h1 id="deploying-graphite-is-a-pain-in-the-ass">1. Deploying Graphite is a pain in the ass</h1>
 
 <p>Graphite is such a strange beast.  It was developed at Orbitz (maybe to track how many airlines still give out free peanuts?) and is open-sourced under the Apache license.  It is written in Python and is actually made up of 3 main parts:</p>
 
@@ -92,7 +92,7 @@
 
 <p>I have tried and failed a few times getting Graphite into a state where it could be deployed automatically, and I usually gave up going “wow this tool is hard to deploy, and Munin is good enough anyway” so I kept giving up.  </p>
 
-<h2 id="why-is-deploying-graphite-a-huge-pain-in-the-ass">Why is deploying Graphite a huge pain in the ass?</h2>
+<h2 id="why-is-deploying-graphite-a-pain-in-the-ass">Why is deploying Graphite a pain in the ass?</h2>
 
 <p>I think the main reason is that <em>django is a pain in the ass to deploy</em>. After noodling around with this for awhile, I figured out a pretty good way to deploy Graphite, and have made <a href="https://github.com/kevin1024/graphite-puppet">a puppet module</a> for installing Graphite on a RHEL6 or Centos6 server.</p>
 
