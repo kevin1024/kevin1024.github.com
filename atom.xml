@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
 	<title><![CDATA[Kevin McCarthy]]></title>
-	<link href="http://kevin1024.github.io/atom.xml" rel="self"/>
-	<link href="http://kevin1024.github.io/"/>
-	<updated>2013-07-17T22:55:37-10:00</updated>
-	<id>http://kevin1024.github.io/</id>
+	<link href="http://kevinmccarthy.org//atom.xml" rel="self"/>
+	<link href="http://kevinmccarthy.org//"/>
+	<updated>2013-07-18T08:18:00-10:00</updated>
+	<id>http://kevinmccarthy.org//</id>
 	<author>
 		<name><![CDATA[Kevin McCarthy]]></name>
 		
@@ -17,9 +17,9 @@
 		
 			<title type="html"><![CDATA[10 Things I Learned Deploying Graphite]]></title>
 		
-		<link href="http://kevin1024.github.io/blog/2013/07/18/10-things-i-learned-deploying-graphite/"/>
+		<link href="http://kevinmccarthy.org//blog/2013/07/18/10-things-i-learned-deploying-graphite/"/>
 		<updated>2013-07-18T17:04:00-10:00</updated>
-		<id>http://kevin1024.github.io/blog/2013/07/18/10-things-i-learned-deploying-graphite</id>
+		<id>http://kevinmccarthy.org//blog/2013/07/18/10-things-i-learned-deploying-graphite</id>
 		<content type="html">
 			<![CDATA[
 				
@@ -41,13 +41,13 @@
 
 <p>Graphite and I have a long history.  It all started when reading <a href="http://codeascraft.com/2011/02/15/measure-anything-measure-everything/">the amazing blog post introducing StatsD by Etsy’s engineering team</a>.  If you haven’t read it yet, I recommend it as it is a nice illustration of why you would want to install Graphite.  If you’ve read it already, you probably have been meaning to get Graphite going but haven’t gotten around to it.</p>
 
-<p><img class="center" src="http://kevin1024.github.io/images/graphite/powerplant.jpg" title="Admit it, you wish you worked here" /></p>
+<p><img class="center" src="http://kevinmccarthy.org//images/graphite/powerplant.jpg" title="Admit it, you wish you worked here" /></p>
 
 <p>Basically, what Graphite does is makes you feel like the badass engineer working on a huge project, intimately familiar with the inner workings of <em>everything</em>.  Why should nuclear engineers be the only ones with awesome control panels?</p>
 
 <p>Here is what Graphite looks like:</p>
 
-<p><img src="http://kevin1024.github.io/images/graphite/graphite.png" title="Almost as cool" /></p>
+<p><img src="http://kevinmccarthy.org//images/graphite/graphite.png" title="Almost as cool" /></p>
 
 <p>Having quick access to all these statistics helps you be more productive.  But there is quite a bit of work go get off the ground.  That brings me to item #1:</p>
 
@@ -83,7 +83,7 @@
 
 <p>In the beginning, there was <a href="http://oss.oetiker.ch/rrdtool/">RRDtool</a>.  Chances are, you have seen and/or are currently staring at an RRDTool graph right now. </p>
 
-<p><img class="center" src="http://kevin1024.github.io/images/graphite/rrdtool.png" title="Look familiar?" /> </p>
+<p><img class="center" src="http://kevinmccarthy.org//images/graphite/rrdtool.png" title="Look familiar?" /> </p>
 
 <p>For years, I’ve been using a project called <a href="http://munin-monitoring.org/">Munin</a>.  Munin is by far one of my favorite tools.  It is beautiful in its simplicity.  Each of your servers that you are monitoring runs a process called <code>munin-node</code>, and on your main graph server, you run a cron job that connects to all these servers and requests data about them periodically.  Then it writes this info out into an RRDTool database and generates a graph, as well as an HTML file pointing to all the graphs it has generated.</p>
 
@@ -365,7 +365,7 @@ comfortable with that average.  By default, you need at least 50% of the
 data to be non-null to store this average value.  This is configurable
 by changing a setting called <code>xFilesFactor</code>, which is pretty much my favorite variable name ever.  Why?  No reason.</p>
 
-<p><img class="left" src="http://kevin1024.github.io/images/graphite/xfiles.jpg" /></p>
+<p><img class="left" src="http://kevinmccarthy.org//images/graphite/xfiles.jpg" /></p>
 
 <p>The other thing that can trip you up is aggregating <em>counts</em>.  What
 happens when we average 60 seconds of counts?  Well, we lose around

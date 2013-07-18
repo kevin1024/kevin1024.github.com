@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://kevin1024.github.io/sitemap.xml 
+Sitemap: http://kevinmccarthy.org//sitemap.xml 
