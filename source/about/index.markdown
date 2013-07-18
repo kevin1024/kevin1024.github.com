@@ -7,4 +7,5 @@ sharing: true
 footer: true
 ---
 
-I'm a tecnology enthusiast living in Hawaii.  This is my blog.
+I work at [Real Geeks](http://www.realgeeks.com/) in Kailua, Hawaii and
+enjoy messing with Python, Ruby, and Javascript in my spare time.
