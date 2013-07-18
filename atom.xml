@@ -1,61 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!doctype html>
-<!-- START OF _layouts/default.html -->
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" >
-		<meta content="width=device-width,initial-scale=1" name="viewport">
-		<meta content="" name="description">
-		<meta content="Kevin McCarthy" name="author">
+	<title><![CDATA[Kevin McCarthy]]></title>
+	<link href="http://kevin1024.github.io/atom.xml" rel="self"/>
+	<link href="http://kevin1024.github.io/"/>
+	<updated>2013-07-17T22:35:07-10:00</updated>
+	<id>http://kevin1024.github.io/</id>
+	<author>
+		<name><![CDATA[Kevin McCarthy]]></name>
 		
-		<title>Kevin McCarthy</title>
-		
-		<!-- Styles -->
-		<link href="/stylesheets/main.css" rel="stylesheet">
-		
-		<!-- Google webfonts -->
-		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
-		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Cousine">
-		
-		<!-- jQuery and plugins -->
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-		
-		<!-- Syntax highlighter -->
-		<link href="/stylesheets/prettify-hemisu.css" type="text/css" rel="stylesheet" />
-		<script type="text/javascript" src="/js/prettify.js"></script>
-		
-	</head>
-	<body onload="prettyPrint()">
+	</author>
+	<generator uri="http://octopress.org/">Octopress</generator>
+
 	
-		<div class="wrap">
-	
-			<header>
-				<div class="title">Kevin McCarthy</div>
+	<entry>
+		
+			<title type="html"><![CDATA[10 Things I Learned Deploying Graphite]]></title>
+		
+		<link href="http://kevin1024.github.io/blog/2013/07/18/10-things-i-learned-deploying-graphite/"/>
+		<updated>2013-07-18T17:04:00-10:00</updated>
+		<id>http://kevin1024.github.io/blog/2013/07/18/10-things-i-learned-deploying-graphite</id>
+		<content type="html">
+			<![CDATA[
 				
-				<div class="navi">
-					<ul>
-						<li><a href="/">Blog</a></li>
-						<li><a href="/blog/archives">Archives</a></li>
-						<li><a href="http://www.github.com/kevin1024/">Github</a></li>
-            <li><a href="/talks/">Talks</a></li>
-            <li><a href="/about/">About</a></li>
-					<ul>
-				</div> <!-- // .navi -->
-			</header>
-		
-				<!-- START OF index.html -->
-
-	
-		
-		<!-- START OF _includes/article.html -->
-<article>
-	<header>
-		<h1><a href="/blog/2013/07/18/10-things-i-learned-deploying-graphite/">10 Things I Learned Deploying Graphite</a></h1>
-		<time>18 July 2013</time>
-	</header>
-		<div class="content">
-			<ul id="markdown-toc">
+					<p></p>
+				
+			]]>
+			<![CDATA[<ul id="markdown-toc">
   <li><a href="#deploying-graphite-is-a-huge-pain-in-the-ass">1. Deploying Graphite is a huge pain in the ass</a></li>
   <li><a href="#graphite-is-more-powerful-than-munin">2. Graphite is more powerful than Munin</a></li>
   <li><a href="#there-must-be-50-ways-to-feed-your-graphite">3. There must be 50 ways to feed your Graphite</a></li>
@@ -70,13 +41,13 @@
 
 <p>Graphite and I have a long, sordid history.  You might even say “we go way back.”  It all started when reading <a href="http://codeascraft.com/2011/02/15/measure-anything-measure-everything/">the amazing blog post introducing StatsD by Etsy’s engineering team</a>.  If you haven’t read it yet, I recommend it as it is a nice illustration of why you would want to install Graphite.  If you’ve read it already, you probably have been meaning to get Graphite going but haven’t gotten around to it.</p>
 
-<p><img class="center" src="/images/graphite/powerplant.jpg" title="Admit it, you wish you worked here" /></p>
+<p><img class="center" src="http://kevin1024.github.io/images/graphite/powerplant.jpg" title="Admit it, you wish you worked here" /></p>
 
 <p>Basically, what Graphite does is makes you feel like the badass engineer working on a huge project, intimately familiar with the inner workings of <em>everything</em>.  Why should nuclear engineers be the only ones with awesome control panels?</p>
 
 <p>Here is what Graphite looks like:</p>
 
-<p><img src="/images/graphite/graphite.png" title="Almost as cool" /></p>
+<p><img src="http://kevin1024.github.io/images/graphite/graphite.png" title="Almost as cool" /></p>
 
 <p>Having quick access to all these statistics helps you be more productive.  But there is quite a bit of work go get off the ground.  That brings me to item #1:</p>
 
@@ -112,7 +83,7 @@
 
 <p>In the beginning, there was <a href="http://oss.oetiker.ch/rrdtool/">RRDtool</a>.  Chances are, you have seen and/or are currently staring at an RRDTool graph right now. </p>
 
-<p><img class="center" src="/images/graphite/rrdtool.png" title="Look familiar?" /> </p>
+<p><img class="center" src="http://kevin1024.github.io/images/graphite/rrdtool.png" title="Look familiar?" /> </p>
 
 <p>For years, I’ve been using a project called <a href="http://munin-monitoring.org/">Munin</a>.  Munin is by far one of my favorite tools.  It is beautiful in its simplicity.  Each of your servers that you are monitoring runs a process called <code>munin-node</code>, and on your main graph server, you run a cron job that connects to all these servers and requests data about them periodically.  Then it writes this info out into an RRDTool database and generates a graph, as well as an HTML file pointing to all the graphs it has generated.</p>
 
@@ -394,7 +365,7 @@ comfortable with that average.  By default, you need at least 50% of the
 data to be non-null to store this average value.  This is configurable
 by changing a setting called <code>xFilesFactor</code>, which is pretty much my favorite variable name ever.  Why?  No reason.</p>
 
-<p><img class="left" src="/images/graphite/xfiles.jpg" /></p>
+<p><img class="left" src="http://kevin1024.github.io/images/graphite/xfiles.jpg" /></p>
 
 <p>The other thing that can trip you up is aggregating <em>counts</em>.  What
 happens when we average 60 seconds of counts?  Well, we lose around
@@ -423,68 +394,8 @@ just add &amp;format=json to the end of any graph image and get the JSON
 data out of it.  <a href="http://dashboarddude.com/blog/2013/01/23/dashboards-for-graphite/">Here are just a few of them in a nice
 summary</a></p>
 
-
-		</div>
-	<footer>
-		
-
-
-		
-
-
-
-  
-		
-			Tagged under
-		
-    <a class='category' href='/blog/categories/graphite/'>graphite</a>
+]]>
+		</content>
+	</entry>
 	
-
-
-	
-	
-	</footer>
-	
-</article>
-<!-- END OF _includes/article.html -->
-
-	
-	
-<div class="pagination">
-	
-	
-	<span class="total">1 of 1</span>
-	
-	
-</div>
-<!-- END OF index.html -->
-
-		
-			<footer>
-				Copyright &copy; 2013
-
-	Kevin McCarthy
-
-
-			</footer>
-			
-		</div> <!-- // .wrap -->
-	</body>
-	<script>
-		$(document).ready(function() {
-			// Make images center
-			$('p:has(img)').css('text-align', 'center');
-			
-			// Add the image's title attribute as a caption
-			$('p:has(img)').append(function () {
-        if ($('img', this).attr('title')) {
-				  return '<div class="caption">' + $('img', this).attr('title') + '</div>';
-        }
-			});
-			
-			// Prettify code
-			$('code').addClass('prettyprint');
-		});
-	</script>
-</html>
-<!-- END OF _layouts/default.html -->
+</feed>

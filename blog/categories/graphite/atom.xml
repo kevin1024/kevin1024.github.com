@@ -1,61 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!doctype html>
-<!-- START OF _layouts/default.html -->
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" >
-		<meta content="width=device-width,initial-scale=1" name="viewport">
-		<meta content="" name="description">
-		<meta content="Kevin McCarthy" name="author">
-		
-		<title>Kevin McCarthy</title>
-		
-		<!-- Styles -->
-		<link href="/stylesheets/main.css" rel="stylesheet">
-		
-		<!-- Google webfonts -->
-		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
-		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Cousine">
-		
-		<!-- jQuery and plugins -->
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-		
-		<!-- Syntax highlighter -->
-		<link href="/stylesheets/prettify-hemisu.css" type="text/css" rel="stylesheet" />
-		<script type="text/javascript" src="/js/prettify.js"></script>
-		
-	</head>
-	<body onload="prettyPrint()">
-	
-		<div class="wrap">
-	
-			<header>
-				<div class="title">Kevin McCarthy</div>
-				
-				<div class="navi">
-					<ul>
-						<li><a href="/">Blog</a></li>
-						<li><a href="/blog/archives">Archives</a></li>
-						<li><a href="http://www.github.com/kevin1024/">Github</a></li>
-            <li><a href="/talks/">Talks</a></li>
-            <li><a href="/about/">About</a></li>
-					<ul>
-				</div> <!-- // .navi -->
-			</header>
-		
-				<!-- START OF index.html -->
+  <title><![CDATA[Category: graphite | Kevin McCarthy]]></title>
+  <link href="http://kevin1024.github.io/blog/categories/graphite/atom.xml" rel="self"/>
+  <link href="http://kevin1024.github.io/"/>
+  <updated>2013-07-17T22:35:07-10:00</updated>
+  <id>http://kevin1024.github.io/</id>
+  <author>
+    <name><![CDATA[Kevin McCarthy]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
-	
-		
-		<!-- START OF _includes/article.html -->
-<article>
-	<header>
-		<h1><a href="/blog/2013/07/18/10-things-i-learned-deploying-graphite/">10 Things I Learned Deploying Graphite</a></h1>
-		<time>18 July 2013</time>
-	</header>
-		<div class="content">
-			<ul id="markdown-toc">
+  
+  <entry>
+    <title type="html"><![CDATA[10 Things I Learned Deploying Graphite]]></title>
+    <link href="http://kevin1024.github.io/blog/2013/07/18/10-things-i-learned-deploying-graphite/"/>
+    <updated>2013-07-18T17:04:00-10:00</updated>
+    <id>http://kevin1024.github.io/blog/2013/07/18/10-things-i-learned-deploying-graphite</id>
+    <content type="html"><![CDATA[<ul id="markdown-toc">
   <li><a href="#deploying-graphite-is-a-huge-pain-in-the-ass">1. Deploying Graphite is a huge pain in the ass</a></li>
   <li><a href="#graphite-is-more-powerful-than-munin">2. Graphite is more powerful than Munin</a></li>
   <li><a href="#there-must-be-50-ways-to-feed-your-graphite">3. There must be 50 ways to feed your Graphite</a></li>
@@ -70,13 +33,13 @@
 
 <p>Graphite and I have a long, sordid history.  You might even say “we go way back.”  It all started when reading <a href="http://codeascraft.com/2011/02/15/measure-anything-measure-everything/">the amazing blog post introducing StatsD by Etsy’s engineering team</a>.  If you haven’t read it yet, I recommend it as it is a nice illustration of why you would want to install Graphite.  If you’ve read it already, you probably have been meaning to get Graphite going but haven’t gotten around to it.</p>
 
-<p><img class="center" src="/images/graphite/powerplant.jpg" title="Admit it, you wish you worked here" /></p>
+<p><img class="center" src="/images/graphite/powerplant.jpg" title="Admit it, you wish you worked here" ></p>
 
 <p>Basically, what Graphite does is makes you feel like the badass engineer working on a huge project, intimately familiar with the inner workings of <em>everything</em>.  Why should nuclear engineers be the only ones with awesome control panels?</p>
 
 <p>Here is what Graphite looks like:</p>
 
-<p><img src="/images/graphite/graphite.png" title="Almost as cool" /></p>
+<p><img src="/images/graphite/graphite.png" title="Almost as cool" ></p>
 
 <p>Having quick access to all these statistics helps you be more productive.  But there is quite a bit of work go get off the ground.  That brings me to item #1:</p>
 
@@ -112,7 +75,7 @@
 
 <p>In the beginning, there was <a href="http://oss.oetiker.ch/rrdtool/">RRDtool</a>.  Chances are, you have seen and/or are currently staring at an RRDTool graph right now. </p>
 
-<p><img class="center" src="/images/graphite/rrdtool.png" title="Look familiar?" /> </p>
+<p><img class="center" src="/images/graphite/rrdtool.png" title="Look familiar?" > </p>
 
 <p>For years, I’ve been using a project called <a href="http://munin-monitoring.org/">Munin</a>.  Munin is by far one of my favorite tools.  It is beautiful in its simplicity.  Each of your servers that you are monitoring runs a process called <code>munin-node</code>, and on your main graph server, you run a cron job that connects to all these servers and requests data about them periodically.  Then it writes this info out into an RRDTool database and generates a graph, as well as an HTML file pointing to all the graphs it has generated.</p>
 
@@ -163,7 +126,7 @@ events are written from the Graphite buffer to disk at the <code>Graphite
 Storage Interval</code>.  Feel free to play around with the number to see how
 they affect the count.  If your <code>StatsD Flush Rate</code> is smaller than the <code>Graphite Storage Interval</code>, you can see how stats start to get lost.  Let it run for awhile and see how the number of events that make it into Graphite (top box) is much lower than the amount that actually happened (bottom box)</p>
 
-<script src="http://cloud.github.com/downloads/processing-js/processing-js/processing-1.4.1.min.js" type="text/javascript"></script>
+<p><script src="http://cloud.github.com/downloads/processing-js/processing-js/processing-1.4.1.min.js" type="text/javascript"></script>
 
 <style>
 .animation_controls {
@@ -191,9 +154,9 @@ they affect the count.  If your <code>StatsD Flush Rate</code> is smaller than t
 <div id="animation"></div>
 <div class="animation_controls">
   <ul>
-  <li>Event Generation Rate: <input id="eventRate" value="100" /> per second</li>
-  <li>StatsD Flush Rate: <input id="statsdFlushRate" value="10" /> seconds</li>
-  <li>Graphite Storage Interval: <input id="graphiteStorageInterval" value="10" /> seconds</li>
+  <li>Event Generation Rate: <input id="eventRate" value="100"></input> per second</li>
+  <li>StatsD Flush Rate: <input id="statsdFlushRate" value="10"> seconds</input></li>
+  <li>Graphite Storage Interval: <input id="graphiteStorageInterval" value="10"> seconds</input></li>
   </ul>
   <button id="update">update</button>
   <button id="reset">reset</button>
@@ -305,6 +268,7 @@ $(document).ready(function() {
     init();
 });
 </script>
+</p>
 
 <h1 id="turning-off-legacy-namespacing">5. Turning off legacy namespacing</h1>
 
@@ -349,12 +313,11 @@ on disk.</p>
 You can read more about it here in <a href="http://graphite.readthedocs.org/en/latest/config-carbon.html#storage-schemas-conf">the official
 documentation</a> but here is an example:</p>
 
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">[nginx_requests]
-</span><span class="line">pattern = nginx\.requests\.count$
-</span><span class="line">retentions = 1s:7d,1m:30d,15m:5y</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p><code>
+[nginx_requests]
+pattern = nginx\.requests\.count$
+retentions = 1s:7d,1m:30d,15m:5y
+</code></p>
 
 <p>This rule is named nginx_requests and matches all stats with the pattern
 <code>nginx\.requests\.count$</code>.  It will keep 1 second resolution for 7 days,
@@ -394,7 +357,7 @@ comfortable with that average.  By default, you need at least 50% of the
 data to be non-null to store this average value.  This is configurable
 by changing a setting called <code>xFilesFactor</code>, which is pretty much my favorite variable name ever.  Why?  No reason.</p>
 
-<p><img class="left" src="/images/graphite/xfiles.jpg" /></p>
+<p><img class="left" src="/images/graphite/xfiles.jpg"></p>
 
 <p>The other thing that can trip you up is aggregating <em>counts</em>.  What
 happens when we average 60 seconds of counts?  Well, we lose around
@@ -423,68 +386,7 @@ just add &amp;format=json to the end of any graph image and get the JSON
 data out of it.  <a href="http://dashboarddude.com/blog/2013/01/23/dashboards-for-graphite/">Here are just a few of them in a nice
 summary</a></p>
 
-
-		</div>
-	<footer>
-		
-
-
-		
-
-
-
+]]></content>
+  </entry>
   
-		
-			Tagged under
-		
-    <a class='category' href='/blog/categories/graphite/'>graphite</a>
-	
-
-
-	
-	
-	</footer>
-	
-</article>
-<!-- END OF _includes/article.html -->
-
-	
-	
-<div class="pagination">
-	
-	
-	<span class="total">1 of 1</span>
-	
-	
-</div>
-<!-- END OF index.html -->
-
-		
-			<footer>
-				Copyright &copy; 2013
-
-	Kevin McCarthy
-
-
-			</footer>
-			
-		</div> <!-- // .wrap -->
-	</body>
-	<script>
-		$(document).ready(function() {
-			// Make images center
-			$('p:has(img)').css('text-align', 'center');
-			
-			// Add the image's title attribute as a caption
-			$('p:has(img)').append(function () {
-        if ($('img', this).attr('title')) {
-				  return '<div class="caption">' + $('img', this).attr('title') + '</div>';
-        }
-			});
-			
-			// Prettify code
-			$('code').addClass('prettyprint');
-		});
-	</script>
-</html>
-<!-- END OF _layouts/default.html -->
+</feed>
