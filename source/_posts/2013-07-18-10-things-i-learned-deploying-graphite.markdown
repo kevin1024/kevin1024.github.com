@@ -9,7 +9,7 @@ categories: graphite
 * list element with functor item
 {:toc}
 
-Graphite and I have a long, sordid history.  You might even say "we go way back."  It all started when reading [the amazing blog post introducing StatsD by Etsy's engineering team](http://codeascraft.com/2011/02/15/measure-anything-measure-everything/).  If you haven't read it yet, I recommend it as it is a nice illustration of why you would want to install Graphite.  If you've read it already, you probably have been meaning to get Graphite going but haven't gotten around to it.
+Graphite and I have a long history.  It all started when reading [the amazing blog post introducing StatsD by Etsy's engineering team](http://codeascraft.com/2011/02/15/measure-anything-measure-everything/).  If you haven't read it yet, I recommend it as it is a nice illustration of why you would want to install Graphite.  If you've read it already, you probably have been meaning to get Graphite going but haven't gotten around to it.
 
 {% img center /images/graphite/powerplant.jpg Admit it, you wish you worked here %}
 
