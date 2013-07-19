@@ -3,7 +3,7 @@ layout: post
 title: "10 Things I Learned Deploying Graphite"
 date: 2013-07-18 17:04
 comments: true
-categories: graphite
+categories: graphite, devops
 ---
 
 * list element with functor item
@@ -41,7 +41,6 @@ The reason this works so well is that the EPEL repository (if you use Centos or 
  * Graphite and Carbon expect their config files to end up in /etc/
  * You have to run `manage.py syncdb` after configuring the database in /etc/.  This database is just used for a few things on the front-end, not actual graph data, so you don't have to worry too much about using a real database.  I just used sqlite.
  * Apache will be configured to serve Graphite on port 80
- * You also need memcached running for some reason
 
 You will probably also want to add some HTTP basic auth so creepers don't start creeping your graphs.  The puppet module will do that for you.
 
@@ -69,7 +68,9 @@ StatsD is the big daddy that started it all, and it works great.  It's written i
 Also, for some reason there are a zillion client libraries for StatsD. For Python, I like [this one](https://github.com/jsocol/pystatsd) (`pip install statsd`)
 
 ## collectd
-Collectd is a daemon that runs on each of your servers and reports back info to Graphite.  It comes with a bunch of plugins and [there are a zillion more for specialized servers](http://collectd.org/wiki/index.php/Table_of_Plugins) that help you track more statistics.  Collectd is in EPEL, but it's a pretty old version.  Also, Collectd doesn't talk directly to Graphite.  The best way I found to set it up is with bucky
+Collectd is a daemon that runs on each of your servers and reports back info to Graphite.  It comes with a bunch of plugins and [there are a zillion more for specialized servers](http://collectd.org/wiki/index.php/Table_of_Plugins) that help you track more statistics.  Collectd is in EPEL, but it's a pretty old version.
+
+Newer versions of Collectd can connect directly to Graphite.  The version I found in EPEL is a bit old so I used bucky to connect them together
 
 ## bucky
 Bucky is a Python daemon that listens for both StatsD *and* collectd packets, and sends them to Graphite.  So it's a replacement for StatsD but it also knows how to use Collectd metrics.  It is pretty great and easy to deploy.  It's also on the EPEL repository, so it's only a `yum install` away on Centos/RHEL.
@@ -217,4 +218,12 @@ API](http://graphite.readthedocs.org/en/1.0/url-api.html) and you can
 just add &format=json to the end of any graph image and get the JSON
 data out of it.  [Here are just a few of them in a nice
 summary](http://dashboarddude.com/blog/2013/01/23/dashboards-for-graphite/)
+
+# Updates and errata
+
+ * The original version of the article stated that Collectd was unable to connect directly to Graphite.  This is incorrect, as newer versions have added this feature.
+ * I also said that Graphite requires memcached.  This is apparently incorrect (and I'm glad it doesn't!)
+ * devicenull pointed this out on Reddit: "Graphite loves SSDs. If you put it on a normal drive you're going to have to upgrade, so just use a SSD from the beginning."  My stats server is running fine on an oldschool drive, but I can see how IO could start going crazy.
+
+
 
