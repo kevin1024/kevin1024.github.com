@@ -88,11 +88,11 @@ What the heck is a StatsD flush interval?  Remember how I said that StatsD batch
 
 What happens if you start sending stats faster than Graphite's highest resolution?  Graphite will start dropping metrics.
 
-Let's say you're tracking clicks on a button that says "Kevin is Awesome".  This is a very tempting button, so people click it about 5 times a second.
+Perhaps you're tracking clicks on a button that says "Kevin is Awesome".  This is a very tempting button, so people click it about 5 times a second.
 
 StatsD starts batching things: 10 seconds of people mashing the button means that each batch will have 50 clicks in it.
 
-However, let's say that Graphite's interval is set to a minute.  That means that during that minute, we will have sent 6 batches of 50 clicks for a total of 300 clicks.  However, Graphite will only record one of those batches, so it will only record 50 clicks instead of 100.
+For this example, let's say that Graphite's interval is set to a minute.  That means that during that minute, we will have sent 6 batches of 50 clicks for a total of 300 clicks.  However, Graphite will only record one of those batches, so it will only record 50 clicks instead of 100.
 
 To make this concept a little easier to understand, here is a little
 Processing sketch I whipped that simulates the process.  Events are
