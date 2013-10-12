@@ -1,0 +1,167 @@
+
+<!doctype html>
+<!-- START OF _layouts/default.html -->
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" >
+		<meta content="width=device-width,initial-scale=1" name="viewport">
+		<meta content="" name="description">
+		<meta content="Kevin McCarthy" name="author">
+		
+		<title>Setting Up vim for Clojure &mdash; Kevin McCarthy</title>
+		
+		<!-- Styles -->
+		<link href="/stylesheets/main.css" rel="stylesheet">
+		
+		<!-- Google webfonts -->
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Cousine">
+		
+		<!-- jQuery and plugins -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		
+		<!-- Syntax highlighter -->
+		<link href="/stylesheets/prettify-hemisu.css" type="text/css" rel="stylesheet" />
+		<script type="text/javascript" src="/js/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+	
+		<div class="wrap">
+	
+			<header>
+				<div class="title">Kevin McCarthy</div>
+				
+				<div class="navi">
+					<ul>
+						<li><a href="/">Blog</a></li>
+						<li><a href="/blog/archives">Archives</a></li>
+						<li><a href="http://www.github.com/kevin1024/">Github</a></li>
+            <li><a href="/talks/">Talks</a></li>
+            <li><a href="/about/">About</a></li>
+					<ul>
+				</div> <!-- // .navi -->
+			</header>
+		
+				<!-- START OF _layouts/post.html -->
+
+<!-- START OF _includes/article.html -->
+<article>
+	<header>
+		<h1><a href="/blog/2013/10/12/setting-up-vim-for-clojure/">Setting Up vim for Clojure</a></h1>
+		<time>12 October 2013</time>
+	</header>
+		<div class="content">
+			<p>I’ve been reading through <a href="http://www.manning.com/fogus2/">the second edition of They Joy Of Clojure</a> for the <a href="http://www.meetup.com/ClojureHNL/">ClojureHNL</a> meetup group and wanted to see how I could improve my Vim setup for editing Clojure code.  This is mostly a note to myself but I thought someone else might find it interesting.  The impetus behind this was feeling the pain of trying to balance perentheses and seeing some Emacs jockeys kick ass with nREPL and wanting in on the action.  So, without further ado, here is what I did.</p>
+
+<h1 id="install-pathogen">1. Install pathogen</h1>
+<p>If you’ve played with vim plugins at all, you probably already know about <a href="https://github.com/tpope/vim-pathogen">Pathogen</a> but if you don’t, you’re in for a treat.  Pathogen vastly simplifies installing and manaing your vim plugins.  <a href="https://github.com/tpope/vim-pathogen#installation">Follow the installation instructions</a> and rejoice.</p>
+
+<h1 id="run-the-newest-version-of-vim">2. Run the newest version of vim</h1>
+<p>Vim versions newer than 7.3.803 ship with the <a href="https://github.com/guns/vim-clojure-static">vim-static</a> runtime files.  These tell vim how to indent and syntax-highlight Clojure.</p>
+
+<h1 id="install-vim-fireplace">3. Install vim-fireplace</h1>
+<p><a href="https://github.com/tpope/vim-fireplace">vim-fireplace</a> is a plugin that puts a Clojure repl inside your Vim.  It connects to nREPL (which is what you get when you run <code>lein repl</code>).  Here’s how I installed it:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span class="nb">cd</span> ~/.vim/bundle
+</span><span class="line">git clone git://github.com/tpope/vim-fireplace.git
+</span><span class="line">git clone git://github.com/tpope/vim-classpath.git
+</span><span class="line">git clone git://github.com/guns/vim-clojure-static.git
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h1 id="install-pareditvim">4. Install paredit.vim</h1>
+<p>This is the magic plugin that makes it so you don’t have to worry about matching parentheses anymore.  </p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span class="nb">cd</span> ~/.vim/bundle
+</span><span class="line">git clone https://github.com/vim-scripts/paredit.vim
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h1 id="enjoy">5. Enjoy!</h1>
+<p>I usually start by going to my Clojure project and running <code>lein repl</code>.  This gives vim-fireplace something to connect to.  Now you can type <code>cqc</code> to get a repl, or <code>cqq</code> to put the code under your cursor into the repl.</p>
+
+<p>Also, indentation works and matching parentheses are automatically added.  It’s actually impossible to type parens that <em>don’t</em> match.  You can do other awesome stuff with paredit, including <em>slurp</em> and <em>barf</em>!  Read more in the <a href="https://github.com/vim-scripts/paredit.vim/blob/master/doc/paredit.txt">paredit docs</a></p>
+
+<h1 id="my-vimrc">My .vimrc</h1>
+<p>Here’s a heavily pared down minimal vimrc that works.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="vim"><span class="line">execute pathogen#infect<span class="p">()</span>
+</span><span class="line"><span class="nb">syntax</span> <span class="k">on</span>
+</span><span class="line"><span class="k">filetype</span> plugin indent <span class="k">on</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+		</div>
+	<footer>
+		
+
+
+		
+
+
+
+  
+		
+			Tagged under
+		
+    <a class='category' href='/blog/categories/vim/'>vim</a>
+	
+
+
+	
+	
+	</footer>
+	
+</article>
+<!-- END OF _includes/article.html -->
+
+
+<!-- END OF _/layouts/post.html -->
+
+		
+			<footer>
+				Copyright &copy; 2013
+
+	Kevin McCarthy
+
+
+			</footer>
+			
+		</div> <!-- // .wrap -->
+	</body>
+	<script>
+		$(document).ready(function() {
+			// Make images center
+			$('p:has(img)').css('text-align', 'center');
+			
+			// Add the image's title attribute as a caption
+			$('p:has(img)').append(function () {
+        if ($('img', this).attr('title')) {
+				  return '<div class="caption">' + $('img', this).attr('title') + '</div>';
+        }
+			});
+			
+			// Prettify code
+			$('code').addClass('prettyprint');
+		});
+	</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-42549997-1', 'kevinmccarthy.org');
+  ga('send', 'pageview');
+
+</script>
+</html>
+<!-- END OF _layouts/default.html -->

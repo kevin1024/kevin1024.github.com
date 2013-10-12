@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: graphite, | Kevin McCarthy]]></title>
-  <link href="http://kevinmccarthy.org//blog/categories/graphite/atom.xml" rel="self"/>
+  <title><![CDATA[Category: devops | Kevin McCarthy]]></title>
+  <link href="http://kevinmccarthy.org//blog/categories/devops/atom.xml" rel="self"/>
   <link href="http://kevinmccarthy.org//"/>
   <updated>2013-10-12T11:21:20-10:00</updated>
   <id>http://kevinmccarthy.org//</id>

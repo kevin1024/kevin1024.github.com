@@ -64,6 +64,7 @@
   <li><a href="#aggregating-data-what">8. Aggregating data: What??</a></li>
   <li><a href="#hitcount-vs-summarize">9. hitcount() vs summarize()</a></li>
   <li><a href="#holy-crap-there-are-a-lot-of-graphite-dashboards">10. Holy crap there are a lot of Graphite Dashboards</a></li>
+  <li><a href="#updates-and-errata">Updates and errata</a></li>
 </ul>
 
 <p>Graphite and I have a long history.  It all started when reading <a href="http://codeascraft.com/2011/02/15/measure-anything-measure-everything/">the amazing blog post introducing StatsD by Etsy’s engineering team</a>.  If you haven’t read it yet, I recommend it as it is a nice illustration of why you would want to install Graphite.  If you’ve read it already, you probably have been meaning to get Graphite going but haven’t gotten around to it.</p>
@@ -101,7 +102,6 @@
   <li>Graphite and Carbon expect their config files to end up in /etc/</li>
   <li>You have to run <code>manage.py syncdb</code> after configuring the database in /etc/.  This database is just used for a few things on the front-end, not actual graph data, so you don’t have to worry too much about using a real database.  I just used sqlite.</li>
   <li>Apache will be configured to serve Graphite on port 80</li>
-  <li>You also need memcached running for some reason</li>
 </ul>
 
 <p>You will probably also want to add some HTTP basic auth so creepers don’t start creeping your graphs.  The puppet module will do that for you.</p>
@@ -128,7 +128,9 @@
 <p>Also, for some reason there are a zillion client libraries for StatsD. For Python, I like <a href="https://github.com/jsocol/pystatsd">this one</a> (<code>pip install statsd</code>)</p>
 
 <h2 id="collectd">collectd</h2>
-<p>Collectd is a daemon that runs on each of your servers and reports back info to Graphite.  It comes with a bunch of plugins and <a href="http://collectd.org/wiki/index.php/Table_of_Plugins">there are a zillion more for specialized servers</a> that help you track more statistics.  Collectd is in EPEL, but it’s a pretty old version.  Also, Collectd doesn’t talk directly to Graphite.  The best way I found to set it up is with bucky</p>
+<p>Collectd is a daemon that runs on each of your servers and reports back info to Graphite.  It comes with a bunch of plugins and <a href="http://collectd.org/wiki/index.php/Table_of_Plugins">there are a zillion more for specialized servers</a> that help you track more statistics.  Collectd is in EPEL, but it’s a pretty old version.</p>
+
+<p>Newer versions of Collectd can connect directly to Graphite.  The version I found in EPEL is a bit old so I used bucky to connect them together</p>
 
 <h2 id="bucky">bucky</h2>
 <p>Bucky is a Python daemon that listens for both StatsD <em>and</em> collectd packets, and sends them to Graphite.  So it’s a replacement for StatsD but it also knows how to use Collectd metrics.  It is pretty great and easy to deploy.  It’s also on the EPEL repository, so it’s only a <code>yum install</code> away on Centos/RHEL.</p>
@@ -146,11 +148,11 @@
 
 <p>What happens if you start sending stats faster than Graphite’s highest resolution?  Graphite will start dropping metrics.</p>
 
-<p>Let’s say you’re tracking clicks on a button that says “Kevin is Awesome”.  This is a very tempting button, so people click it about 5 times a second.</p>
+<p>Perhaps you’re tracking clicks on a button that says “Kevin is Awesome”.  This is a very tempting button, so people click it about 5 times a second.</p>
 
 <p>StatsD starts batching things: 10 seconds of people mashing the button means that each batch will have 50 clicks in it.</p>
 
-<p>However, let’s say that Graphite’s interval is set to a minute.  That means that during that minute, we will have sent 6 batches of 50 clicks for a total of 300 clicks.  However, Graphite will only record one of those batches, so it will only record 50 clicks instead of 100.</p>
+<p>For this example, let’s say that Graphite’s interval is set to a minute.  That means that during that minute, we will have sent 6 batches of 50 clicks for a total of 300 clicks.  However, Graphite will only record one of those batches, so it will only record 50 clicks instead of 100.</p>
 
 <p>To make this concept a little easier to understand, here is a little
 Processing sketch I whipped that simulates the process.  Events are
@@ -421,6 +423,14 @@ just add &amp;format=json to the end of any graph image and get the JSON
 data out of it.  <a href="http://dashboarddude.com/blog/2013/01/23/dashboards-for-graphite/">Here are just a few of them in a nice
 summary</a></p>
 
+<h1 id="updates-and-errata">Updates and errata</h1>
+
+<ul>
+  <li>The original version of the article stated that Collectd was unable to connect directly to Graphite.  This is incorrect, as newer versions have added this feature.</li>
+  <li>I also said that Graphite requires memcached.  This is apparently incorrect (and I’m glad it doesn’t!)</li>
+  <li>devicenull pointed this out on Reddit: “Graphite loves SSDs. If you put it on a normal drive you’re going to have to upgrade, so just use a SSD from the beginning.”  My stats server is running fine on an oldschool drive, but I can see how IO could start going crazy.</li>
+</ul>
+
 
 		</div>
 	<footer>
@@ -435,7 +445,7 @@ summary</a></p>
 		
 			Tagged under
 		
-    <a class='category' href='/blog/categories/graphite/'>graphite</a>
+    <a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/graphite/'>graphite,</a>
 	
 
 

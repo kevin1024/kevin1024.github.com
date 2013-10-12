@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: vim | Kevin McCarthy]]></title>
+  <link href="http://kevinmccarthy.org//blog/categories/vim/atom.xml" rel="self"/>
+  <link href="http://kevinmccarthy.org//"/>
+  <updated>2013-10-12T11:21:20-10:00</updated>
+  <id>http://kevinmccarthy.org//</id>
+  <author>
+    <name><![CDATA[Kevin McCarthy]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Setting Up vim for Clojure]]></title>
+    <link href="http://kevinmccarthy.org//blog/2013/10/12/setting-up-vim-for-clojure/"/>
+    <updated>2013-10-12T10:54:00-10:00</updated>
+    <id>http://kevinmccarthy.org//blog/2013/10/12/setting-up-vim-for-clojure</id>
+    <content type="html"><![CDATA[<p>I’ve been reading through <a href="http://www.manning.com/fogus2/">the second edition of They Joy Of Clojure</a> for the <a href="http://www.meetup.com/ClojureHNL/">ClojureHNL</a> meetup group and wanted to see how I could improve my Vim setup for editing Clojure code.  This is mostly a note to myself but I thought someone else might find it interesting.  The impetus behind this was feeling the pain of trying to balance perentheses and seeing some Emacs jockeys kick ass with nREPL and wanting in on the action.  So, without further ado, here is what I did.</p>
+
+<h1 id="install-pathogen">1. Install pathogen</h1>
+<p>If you’ve played with vim plugins at all, you probably already know about <a href="https://github.com/tpope/vim-pathogen">Pathogen</a> but if you don’t, you’re in for a treat.  Pathogen vastly simplifies installing and manaing your vim plugins.  <a href="https://github.com/tpope/vim-pathogen#installation">Follow the installation instructions</a> and rejoice.</p>
+
+<h1 id="run-the-newest-version-of-vim">2. Run the newest version of vim</h1>
+<p>Vim versions newer than 7.3.803 ship with the <a href="https://github.com/guns/vim-clojure-static">vim-static</a> runtime files.  These tell vim how to indent and syntax-highlight Clojure.</p>
+
+<h1 id="install-vim-fireplace">3. Install vim-fireplace</h1>
+<p><a href="https://github.com/tpope/vim-fireplace">vim-fireplace</a> is a plugin that puts a Clojure repl inside your Vim.  It connects to nREPL (which is what you get when you run <code>lein repl</code>).  Here’s how I installed it:</p>
+
+<p><code>bash
+cd ~/.vim/bundle
+git clone git://github.com/tpope/vim-fireplace.git
+git clone git://github.com/tpope/vim-classpath.git
+git clone git://github.com/guns/vim-clojure-static.git
+</code></p>
+
+<h1 id="install-pareditvim">4. Install paredit.vim</h1>
+<p>This is the magic plugin that makes it so you don’t have to worry about matching parentheses anymore.  </p>
+
+<p><code>bash
+cd ~/.vim/bundle
+git clone https://github.com/vim-scripts/paredit.vim
+</code></p>
+
+<h1 id="enjoy">5. Enjoy!</h1>
+<p>I usually start by going to my Clojure project and running <code>lein repl</code>.  This gives vim-fireplace something to connect to.  Now you can type <code>cqc</code> to get a repl, or <code>cqq</code> to put the code under your cursor into the repl.</p>
+
+<p>Also, indentation works and matching parentheses are automatically added.  It’s actually impossible to type parens that <em>don’t</em> match.  You can do other awesome stuff with paredit, including <em>slurp</em> and <em>barf</em>!  Read more in the <a href="https://github.com/vim-scripts/paredit.vim/blob/master/doc/paredit.txt">paredit docs</a></p>
+
+<h1 id="my-vimrc">My .vimrc</h1>
+<p>Here’s a heavily pared down minimal vimrc that works.</p>
+
+<p><code>vim
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>
