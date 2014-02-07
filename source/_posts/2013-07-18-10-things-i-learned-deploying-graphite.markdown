@@ -3,7 +3,7 @@ layout: post
 title: "10 Things I Learned Deploying Graphite"
 date: 2013-07-18 17:04
 comments: true
-categories: graphite, devops
+categories: graphite devops
 ---
 
 * list element with functor item
