@@ -6,7 +6,7 @@ comments: true
 categories: vim
 ---
 
-I've been reading through [the second edition of They Joy Of Clojure](http://www.manning.com/fogus2/) for the [ClojureHNL](http://www.meetup.com/ClojureHNL/) meetup group and wanted to see how I could improve my Vim setup for editing Clojure code.  This is mostly a note to myself but I thought someone else might find it interesting.  The impetus behind this was feeling the pain of trying to balance perentheses and seeing some Emacs jockeys kick ass with nREPL and wanting in on the action.  So, without further ado, here is what I did.
+I've been reading through [the second edition of They Joy Of Clojure](http://www.manning.com/fogus2/) for the [ClojureHNL](http://www.meetup.com/ClojureHNL/) meetup group and wanted to see how I could improve my Vim setup for editing Clojure code.  This is mostly a note to myself but I thought someone else might find it interesting.  The impetus behind this was feeling the pain of trying to balance parentheses and seeing some Emacs jockeys kick ass with nREPL and wanting in on the action.  So, without further ado, here is what I did.
 
 # 1. Install pathogen
 If you've played with vim plugins at all, you probably already know about [Pathogen](https://github.com/tpope/vim-pathogen) but if you don't, you're in for a treat.  Pathogen vastly simplifies installing and manaing your vim plugins.  [Follow the installation instructions](https://github.com/tpope/vim-pathogen#installation) and rejoice.
