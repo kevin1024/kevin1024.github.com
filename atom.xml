@@ -4,7 +4,7 @@
 	<title><![CDATA[Kevin McCarthy]]></title>
 	<link href="http://kevinmccarthy.org//atom.xml" rel="self"/>
 	<link href="http://kevinmccarthy.org//"/>
-	<updated>2014-04-05T18:26:14-10:00</updated>
+	<updated>2014-04-05T18:33:26-10:00</updated>
 	<id>http://kevinmccarthy.org//</id>
 	<author>
 		<name><![CDATA[Kevin McCarthy]]></name>
@@ -17,9 +17,9 @@
 		
 			<title type="html"><![CDATA[Securing Internal Dashboards with Oauth]]></title>
 		
-		<link href="http://kevinmccarthy.org//blog/2014/04/04/securing-internal-dashboards-with-oauth/"/>
-		<updated>2014-04-04T17:05:00-10:00</updated>
-		<id>http://kevinmccarthy.org//blog/2014/04/04/securing-internal-dashboards-with-oauth</id>
+		<link href="http://kevinmccarthy.org//blog/2014/04/05/securing-internal-dashboards-with-oauth/"/>
+		<updated>2014-04-05T17:05:00-10:00</updated>
+		<id>http://kevinmccarthy.org//blog/2014/04/05/securing-internal-dashboards-with-oauth</id>
 		<content type="html">
 			<![CDATA[
 				

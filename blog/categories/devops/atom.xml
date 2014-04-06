@@ -4,7 +4,7 @@
   <title><![CDATA[Category: devops | Kevin McCarthy]]></title>
   <link href="http://kevinmccarthy.org//blog/categories/devops/atom.xml" rel="self"/>
   <link href="http://kevinmccarthy.org//"/>
-  <updated>2014-04-05T18:26:14-10:00</updated>
+  <updated>2014-04-05T18:33:26-10:00</updated>
   <id>http://kevinmccarthy.org//</id>
   <author>
     <name><![CDATA[Kevin McCarthy]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Securing Internal Dashboards with Oauth]]></title>
-    <link href="http://kevinmccarthy.org//blog/2014/04/04/securing-internal-dashboards-with-oauth/"/>
-    <updated>2014-04-04T17:05:00-10:00</updated>
-    <id>http://kevinmccarthy.org//blog/2014/04/04/securing-internal-dashboards-with-oauth</id>
+    <link href="http://kevinmccarthy.org//blog/2014/04/05/securing-internal-dashboards-with-oauth/"/>
+    <updated>2014-04-05T17:05:00-10:00</updated>
+    <id>http://kevinmccarthy.org//blog/2014/04/05/securing-internal-dashboards-with-oauth</id>
     <content type="html"><![CDATA[<p>At <a href="http://www.github.com/realgeeks/">Real Geeks</a> we have lots of internal dashboards:  <a href="/blog/2013/07/18/10-things-i-learned-deploying-graphite/">Graphite</a>, <a href="http://logstash.net/">Logstash</a>, <a href="http://munin-monitoring.org/">Munin</a>, and some other internal tools with status pages.  Obviously, I didn’t want these open to the public.  I was using one of two different ways of restricting access, and both of them didn’t work very well.</p>
 
 <h1 id="failed-technique-1-require-a-password">Failed Technique #1: Require a password</h1>
