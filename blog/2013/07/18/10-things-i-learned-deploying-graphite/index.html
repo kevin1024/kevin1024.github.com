@@ -85,8 +85,8 @@
 
 <ol>
   <li>Graphite-web: A Django project that provides a GUI for graphite.  This is what you see when you visit a Graphite install in your browser.  It also has an admin area that lets you set up users that are allowed to create and save graphs.  You can deploy this like any other Django app via wsgi.</li>
-  <li>Carbon: Carbon is a daemon that runs constantly in the background.  Its main job is to take in statistics from the network and write them to disk.  It also does something both complicated and fascinating called “aggregation” which I will explore later.  Carbon will also be replaced eventually by its successor, <a href="https://github.com/graphite-project/ceres">Ceres</a></li>
-  <li>Whisper: Whisper is a time-series database file format.  It doesn’t actually run as a server or anything, it’s just a standard format for storing time-series data.  These databases are a fixed size, and once the data gets old it falls off the other end.  Whisper is a replacement for RRDTool, which I will talk about later.</li>
+  <li>Carbon: Carbon is a daemon that runs constantly in the background.  Its main job is to take in statistics from the network and write them to disk.  It also does something both complicated and fascinating called “aggregation” which I will explore later.  </li>
+  <li>Whisper: Whisper is a time-series database file format.  It doesn’t actually run as a server or anything, it’s just a standard format for storing time-series data.  These databases are a fixed size, and once the data gets old it falls off the other end.  Whisper is a replacement for RRDTool, which I will talk about later. Whisper will also be replaced eventually by its successor, <a href="https://github.com/graphite-project/ceres">Ceres</a></li>
 </ol>
 
 <p>I have tried and failed a few times getting Graphite into a state where it could be deployed automatically, and I usually gave up going “wow this tool is hard to deploy, and Munin is good enough anyway” so I kept giving up.  </p>
@@ -445,7 +445,7 @@ summary</a></p>
 		
 			Tagged under
 		
-    <a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/graphite/'>graphite,</a>
+    <a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/graphite/'>graphite</a>
 	
 
 
@@ -461,7 +461,7 @@ summary</a></p>
 
 		
 			<footer>
-				Copyright &copy; 2013
+				Copyright &copy; 2014
 
 	Kevin McCarthy
 

@@ -1,0 +1,171 @@
+
+<!doctype html>
+<!-- START OF _layouts/default.html -->
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" >
+		<meta content="width=device-width,initial-scale=1" name="viewport">
+		<meta content="" name="description">
+		<meta content="Kevin McCarthy" name="author">
+		
+		<title>Securing Internal Dashboards with Oauth &mdash; Kevin McCarthy</title>
+		
+		<!-- Styles -->
+		<link href="/stylesheets/main.css" rel="stylesheet">
+		
+		<!-- Google webfonts -->
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Cousine">
+		
+		<!-- jQuery and plugins -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		
+		<!-- Syntax highlighter -->
+		<link href="/stylesheets/prettify-hemisu.css" type="text/css" rel="stylesheet" />
+		<script type="text/javascript" src="/js/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+	
+		<div class="wrap">
+	
+			<header>
+				<div class="title">Kevin McCarthy</div>
+				
+				<div class="navi">
+					<ul>
+						<li><a href="/">Blog</a></li>
+						<li><a href="/blog/archives">Archives</a></li>
+						<li><a href="http://www.github.com/kevin1024/">Github</a></li>
+            <li><a href="/talks/">Talks</a></li>
+            <li><a href="/about/">About</a></li>
+					<ul>
+				</div> <!-- // .navi -->
+			</header>
+		
+				<!-- START OF _layouts/post.html -->
+
+<!-- START OF _includes/article.html -->
+<article>
+	<header>
+		<h1><a href="/blog/2014/04/04/securing-internal-dashboards-with-oauth/">Securing Internal Dashboards with Oauth</a></h1>
+		<time>04 April 2014</time>
+	</header>
+		<div class="content">
+			<p>At <a href="http://www.github.com/realgeeks/">Real Geeks</a> we have lots of internal dashboards:  <a href="/blog/2013/07/18/10-things-i-learned-deploying-graphite/">Graphite</a>, <a href="http://logstash.net/">Logstash</a>, <a href="http://munin-monitoring.org/">Munin</a>, and some other internal tools with status pages.  Obviously, I didn’t want these open to the public.  I was using one of two different ways of restricting access, and both of them didn’t work very well.</p>
+
+<h1 id="failed-technique-1-require-a-password">Failed Technique #1: Require a password</h1>
+<p>The first technique I was using was to set up HTTP Basic Auth passwords for our employees, using a hashed password file sitting on the server.  This was relatively simple to set up, but also a huge pain.  Every time someone forgot their password, I would have to update the server configuration (by SSHing into the server, later by changing the Puppet configuration).  When we add or remove employees it’s a manual process.  Unless you have the server running on HTTPS, their passwords are sent over plain text.</p>
+
+<h1 id="failed-technique-2-restrict-access-with-a-firewall-to-ip-addresses">Failed Technique #2: Restrict access with a firewall to IP addresses</h1>
+<p>I also tried by restricting access to these dashboards by requiring a certain IP address in the firewall.  This solves some of the problems with technique #1 but also introduces new ones.  Employees working from home or on their phones couldn’t access the dashboards.  This could probably be solved by having an office VPN but setting that up just for dashboard access is a lot of work.  Also, sometimes our office IP address would change, which again requires a bunch of configuration changes.  Our firewall rules filled up with a bunch of random residential IP addresses so employees could get online from home.</p>
+
+<h1 id="the-solution-oauth">The solution: Oauth</h1>
+<p>After feeling the pain for awhile, I knew there had to be a better way.  All of our technical employees have accounts on the <a href="http://www.github.com/realgeeks/">Real Geeks Github Organization</a>.  Github also has an oauth2 provider.  If you’re not familiar with Oauth2, it’s the technique used by those “Log in with Google/Facebook/etc” buttons you see on a lot of websites.  It allows a website to delegate the authentication and account management to another service, in my case, Github.</p>
+
+<p>The next challenge would be to come up with a way to add Oauth2 support to all of my projects.  I didn’t want to have to run forks of Graphite, Logstash, and Munin.  I wanted my solution to be easy to deploy and be lightweight.  I also wanted it to be secure.</p>
+
+<p>After a bit of thinking and searching around, I found <a href="https://github.com/bitly/google_auth_proxy">google_auth_proxy</a>.  It’s an open-source project written in Go that <em>almost</em> solves my problem.  It acts as a guardian that sits in front of your application, requiring the user to authenticate with the Google Oauth2 server before allowing them to continue. Once they have authenticated with Google, it stores a session in an HMAC-signed cookie and allows the requests to proxy through to the backend.</p>
+
+<p>The only problem is, google_oauth_proxy only works with Google oauth servers.  So, I forked it and made a new project <a href="https://github.com/kevin1024/oauth_proxy">oauth_proxy</a>.  oauth_proxy is intended to work with any oauth2 provider, not just google.  Since it’s written in go, it compiles to a static binary that can be easily deployed.</p>
+
+<p><img src="/images/oauth/oauth.gif" title="Looks pretty cool huh" /></p>
+
+<p>Here is an example invocation of the oauth_proxy server:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">/oauth_proxy --client-id="f4dddfabbebe5ba" \
+</span><span class="line">--client-secret="ecb0561717bbf29956f" \
+</span><span class="line">--upstream="http://localhost:8080/" \
+</span><span class="line">--cookie-secret="secretsecret" \
+</span><span class="line">--login-url="https://github.com/login/oauth/authorize" \
+</span><span class="line">--redirect-url="http://localhost:4180/oauth2/callback/" \
+</span><span class="line">--redemption-url="https://github.com/login/oauth/access_token \
+</span><span class="line">--oauth-scope=user \
+</span><span class="line">--user-verification-command=/bin/verify_github_team.py"</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The client ID and client secret come from the Github oauth control panel.  Upstream points to the upstream server that I’m protecting, it should only be listening on localhost.  The cookie secret is used to sign the session cookie.  The login URL is the token generation endpoint of the oauth provider, and the redirect URL should point to the redirect url on oauth_proxy (it’s always /oauth2/callback, but the hostname changes depending on your server).  Finally, the redemption URL is your oauth2 provider’s token redemption URL where the code from the redirect URL gets posted and exchanged for an access token.  </p>
+
+<h1 id="getting-fancy-with-auth-tokens">Getting fancy with auth tokens</h1>
+
+<p>Sometimes, getting an auth token from the oauth2 provider is not sufficient to gain access to your backend. For example, maybe you want to make sure that the person authenticating belongs to a specific Github organization. For this, you can create a user verification command. You can see an example script in contrib that verifies that a given access token belongs to a user in a specific organization.  In order for this script to work, I have to request <a href="https://developer.github.com/v3/oauth/#scopes">the “user” scope from github</a>.</p>
+
+<h1 id="notes">Notes</h1>
+
+<p>This was my first time using Go, but I found it fairly simple to figure out what was going on.  The <code>go fmt</code> command is pretty amazing, especially for a Go beginner with no idea about Go style.  I would like to eventually improve the login screen since it’s just a small button in the corner that says “login”, pretty boring.  There are probably a lot of improvements to be made (better support for other oauth providers?) so please send a pull request!</p>
+
+		</div>
+	<footer>
+		
+
+
+		
+
+
+
+  
+		
+			Tagged under
+		
+    <a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/oauth2/'>oauth2</a>
+	
+
+
+	
+	
+	</footer>
+	
+</article>
+<!-- END OF _includes/article.html -->
+
+
+<!-- END OF _/layouts/post.html -->
+
+		
+			<footer>
+				Copyright &copy; 2014
+
+	Kevin McCarthy
+
+
+			</footer>
+			
+		</div> <!-- // .wrap -->
+	</body>
+	<script>
+		$(document).ready(function() {
+			// Make images center
+			$('p:has(img)').css('text-align', 'center');
+			
+			// Add the image's title attribute as a caption
+			$('p:has(img)').append(function () {
+        if ($('img', this).attr('title')) {
+				  return '<div class="caption">' + $('img', this).attr('title') + '</div>';
+        }
+			});
+			
+			// Prettify code
+			$('code').addClass('prettyprint');
+		});
+	</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-42549997-1', 'kevinmccarthy.org');
+  ga('send', 'pageview');
+
+</script>
+</html>
+<!-- END OF _layouts/default.html -->

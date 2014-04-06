@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vim | Kevin McCarthy]]></title>
   <link href="http://kevinmccarthy.org//blog/categories/vim/atom.xml" rel="self"/>
   <link href="http://kevinmccarthy.org//"/>
-  <updated>2013-10-12T11:21:20-10:00</updated>
+  <updated>2014-04-05T18:26:14-10:00</updated>
   <id>http://kevinmccarthy.org//</id>
   <author>
     <name><![CDATA[Kevin McCarthy]]></name>
@@ -18,7 +18,7 @@
     <link href="http://kevinmccarthy.org//blog/2013/10/12/setting-up-vim-for-clojure/"/>
     <updated>2013-10-12T10:54:00-10:00</updated>
     <id>http://kevinmccarthy.org//blog/2013/10/12/setting-up-vim-for-clojure</id>
-    <content type="html"><![CDATA[<p>I’ve been reading through <a href="http://www.manning.com/fogus2/">the second edition of They Joy Of Clojure</a> for the <a href="http://www.meetup.com/ClojureHNL/">ClojureHNL</a> meetup group and wanted to see how I could improve my Vim setup for editing Clojure code.  This is mostly a note to myself but I thought someone else might find it interesting.  The impetus behind this was feeling the pain of trying to balance perentheses and seeing some Emacs jockeys kick ass with nREPL and wanting in on the action.  So, without further ado, here is what I did.</p>
+    <content type="html"><![CDATA[<p>I’ve been reading through <a href="http://www.manning.com/fogus2/">the second edition of They Joy Of Clojure</a> for the <a href="http://www.meetup.com/ClojureHNL/">ClojureHNL</a> meetup group and wanted to see how I could improve my Vim setup for editing Clojure code.  This is mostly a note to myself but I thought someone else might find it interesting.  The impetus behind this was feeling the pain of trying to balance parentheses and seeing some Emacs jockeys kick ass with nREPL and wanting in on the action.  So, without further ado, here is what I did.</p>
 
 <h1 id="install-pathogen">1. Install pathogen</h1>
 <p>If you’ve played with vim plugins at all, you probably already know about <a href="https://github.com/tpope/vim-pathogen">Pathogen</a> but if you don’t, you’re in for a treat.  Pathogen vastly simplifies installing and manaing your vim plugins.  <a href="https://github.com/tpope/vim-pathogen#installation">Follow the installation instructions</a> and rejoice.</p>

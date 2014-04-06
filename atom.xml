@@ -4,7 +4,7 @@
 	<title><![CDATA[Kevin McCarthy]]></title>
 	<link href="http://kevinmccarthy.org//atom.xml" rel="self"/>
 	<link href="http://kevinmccarthy.org//"/>
-	<updated>2013-10-12T11:21:20-10:00</updated>
+	<updated>2014-04-05T18:26:14-10:00</updated>
 	<id>http://kevinmccarthy.org//</id>
 	<author>
 		<name><![CDATA[Kevin McCarthy]]></name>
@@ -12,6 +12,72 @@
 	</author>
 	<generator uri="http://octopress.org/">Octopress</generator>
 
+	
+	<entry>
+		
+			<title type="html"><![CDATA[Securing Internal Dashboards with Oauth]]></title>
+		
+		<link href="http://kevinmccarthy.org//blog/2014/04/04/securing-internal-dashboards-with-oauth/"/>
+		<updated>2014-04-04T17:05:00-10:00</updated>
+		<id>http://kevinmccarthy.org//blog/2014/04/04/securing-internal-dashboards-with-oauth</id>
+		<content type="html">
+			<![CDATA[
+				
+					<p></p>
+				
+			]]>
+			<![CDATA[<p>At <a href="http://www.github.com/realgeeks/">Real Geeks</a> we have lots of internal dashboards:  <a href="http://kevinmccarthy.org//blog/2013/07/18/10-things-i-learned-deploying-graphite/">Graphite</a>, <a href="http://logstash.net/">Logstash</a>, <a href="http://munin-monitoring.org/">Munin</a>, and some other internal tools with status pages.  Obviously, I didn’t want these open to the public.  I was using one of two different ways of restricting access, and both of them didn’t work very well.</p>
+
+<h1 id="failed-technique-1-require-a-password">Failed Technique #1: Require a password</h1>
+<p>The first technique I was using was to set up HTTP Basic Auth passwords for our employees, using a hashed password file sitting on the server.  This was relatively simple to set up, but also a huge pain.  Every time someone forgot their password, I would have to update the server configuration (by SSHing into the server, later by changing the Puppet configuration).  When we add or remove employees it’s a manual process.  Unless you have the server running on HTTPS, their passwords are sent over plain text.</p>
+
+<h1 id="failed-technique-2-restrict-access-with-a-firewall-to-ip-addresses">Failed Technique #2: Restrict access with a firewall to IP addresses</h1>
+<p>I also tried by restricting access to these dashboards by requiring a certain IP address in the firewall.  This solves some of the problems with technique #1 but also introduces new ones.  Employees working from home or on their phones couldn’t access the dashboards.  This could probably be solved by having an office VPN but setting that up just for dashboard access is a lot of work.  Also, sometimes our office IP address would change, which again requires a bunch of configuration changes.  Our firewall rules filled up with a bunch of random residential IP addresses so employees could get online from home.</p>
+
+<h1 id="the-solution-oauth">The solution: Oauth</h1>
+<p>After feeling the pain for awhile, I knew there had to be a better way.  All of our technical employees have accounts on the <a href="http://www.github.com/realgeeks/">Real Geeks Github Organization</a>.  Github also has an oauth2 provider.  If you’re not familiar with Oauth2, it’s the technique used by those “Log in with Google/Facebook/etc” buttons you see on a lot of websites.  It allows a website to delegate the authentication and account management to another service, in my case, Github.</p>
+
+<p>The next challenge would be to come up with a way to add Oauth2 support to all of my projects.  I didn’t want to have to run forks of Graphite, Logstash, and Munin.  I wanted my solution to be easy to deploy and be lightweight.  I also wanted it to be secure.</p>
+
+<p>After a bit of thinking and searching around, I found <a href="https://github.com/bitly/google_auth_proxy">google_auth_proxy</a>.  It’s an open-source project written in Go that <em>almost</em> solves my problem.  It acts as a guardian that sits in front of your application, requiring the user to authenticate with the Google Oauth2 server before allowing them to continue. Once they have authenticated with Google, it stores a session in an HMAC-signed cookie and allows the requests to proxy through to the backend.</p>
+
+<p>The only problem is, google_oauth_proxy only works with Google oauth servers.  So, I forked it and made a new project <a href="https://github.com/kevin1024/oauth_proxy">oauth_proxy</a>.  oauth_proxy is intended to work with any oauth2 provider, not just google.  Since it’s written in go, it compiles to a static binary that can be easily deployed.</p>
+
+<p><img src="http://kevinmccarthy.org//images/oauth/oauth.gif" title="Looks pretty cool huh" /></p>
+
+<p>Here is an example invocation of the oauth_proxy server:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">/oauth_proxy --client-id="f4dddfabbebe5ba" \
+</span><span class="line">--client-secret="ecb0561717bbf29956f" \
+</span><span class="line">--upstream="http://localhost:8080/" \
+</span><span class="line">--cookie-secret="secretsecret" \
+</span><span class="line">--login-url="https://github.com/login/oauth/authorize" \
+</span><span class="line">--redirect-url="http://localhost:4180/oauth2/callback/" \
+</span><span class="line">--redemption-url="https://github.com/login/oauth/access_token \
+</span><span class="line">--oauth-scope=user \
+</span><span class="line">--user-verification-command=/bin/verify_github_team.py"</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The client ID and client secret come from the Github oauth control panel.  Upstream points to the upstream server that I’m protecting, it should only be listening on localhost.  The cookie secret is used to sign the session cookie.  The login URL is the token generation endpoint of the oauth provider, and the redirect URL should point to the redirect url on oauth_proxy (it’s always /oauth2/callback, but the hostname changes depending on your server).  Finally, the redemption URL is your oauth2 provider’s token redemption URL where the code from the redirect URL gets posted and exchanged for an access token.  </p>
+
+<h1 id="getting-fancy-with-auth-tokens">Getting fancy with auth tokens</h1>
+
+<p>Sometimes, getting an auth token from the oauth2 provider is not sufficient to gain access to your backend. For example, maybe you want to make sure that the person authenticating belongs to a specific Github organization. For this, you can create a user verification command. You can see an example script in contrib that verifies that a given access token belongs to a user in a specific organization.  In order for this script to work, I have to request <a href="https://developer.github.com/v3/oauth/#scopes">the “user” scope from github</a>.</p>
+
+<h1 id="notes">Notes</h1>
+
+<p>This was my first time using Go, but I found it fairly simple to figure out what was going on.  The <code>go fmt</code> command is pretty amazing, especially for a Go beginner with no idea about Go style.  I would like to eventually improve the login screen since it’s just a small button in the corner that says “login”, pretty boring.  There are probably a lot of improvements to be made (better support for other oauth providers?) so please send a pull request!</p>
+]]>
+		</content>
+	</entry>
 	
 	<entry>
 		
@@ -26,7 +92,7 @@
 					<p></p>
 				
 			]]>
-			<![CDATA[<p>I’ve been reading through <a href="http://www.manning.com/fogus2/">the second edition of They Joy Of Clojure</a> for the <a href="http://www.meetup.com/ClojureHNL/">ClojureHNL</a> meetup group and wanted to see how I could improve my Vim setup for editing Clojure code.  This is mostly a note to myself but I thought someone else might find it interesting.  The impetus behind this was feeling the pain of trying to balance perentheses and seeing some Emacs jockeys kick ass with nREPL and wanting in on the action.  So, without further ado, here is what I did.</p>
+			<![CDATA[<p>I’ve been reading through <a href="http://www.manning.com/fogus2/">the second edition of They Joy Of Clojure</a> for the <a href="http://www.meetup.com/ClojureHNL/">ClojureHNL</a> meetup group and wanted to see how I could improve my Vim setup for editing Clojure code.  This is mostly a note to myself but I thought someone else might find it interesting.  The impetus behind this was feeling the pain of trying to balance parentheses and seeing some Emacs jockeys kick ass with nREPL and wanting in on the action.  So, without further ado, here is what I did.</p>
 
 <h1 id="install-pathogen">1. Install pathogen</h1>
 <p>If you’ve played with vim plugins at all, you probably already know about <a href="https://github.com/tpope/vim-pathogen">Pathogen</a> but if you don’t, you’re in for a treat.  Pathogen vastly simplifies installing and manaing your vim plugins.  <a href="https://github.com/tpope/vim-pathogen#installation">Follow the installation instructions</a> and rejoice.</p>
@@ -120,8 +186,8 @@
 
 <ol>
   <li>Graphite-web: A Django project that provides a GUI for graphite.  This is what you see when you visit a Graphite install in your browser.  It also has an admin area that lets you set up users that are allowed to create and save graphs.  You can deploy this like any other Django app via wsgi.</li>
-  <li>Carbon: Carbon is a daemon that runs constantly in the background.  Its main job is to take in statistics from the network and write them to disk.  It also does something both complicated and fascinating called “aggregation” which I will explore later.  Carbon will also be replaced eventually by its successor, <a href="https://github.com/graphite-project/ceres">Ceres</a></li>
-  <li>Whisper: Whisper is a time-series database file format.  It doesn’t actually run as a server or anything, it’s just a standard format for storing time-series data.  These databases are a fixed size, and once the data gets old it falls off the other end.  Whisper is a replacement for RRDTool, which I will talk about later.</li>
+  <li>Carbon: Carbon is a daemon that runs constantly in the background.  Its main job is to take in statistics from the network and write them to disk.  It also does something both complicated and fascinating called “aggregation” which I will explore later.  </li>
+  <li>Whisper: Whisper is a time-series database file format.  It doesn’t actually run as a server or anything, it’s just a standard format for storing time-series data.  These databases are a fixed size, and once the data gets old it falls off the other end.  Whisper is a replacement for RRDTool, which I will talk about later. Whisper will also be replaced eventually by its successor, <a href="https://github.com/graphite-project/ceres">Ceres</a></li>
 </ol>
 
 <p>I have tried and failed a few times getting Graphite into a state where it could be deployed automatically, and I usually gave up going “wow this tool is hard to deploy, and Munin is good enough anyway” so I kept giving up.  </p>
