@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Securing Internal Dashboards with Oauth"
-date: 2014-04-04 17:05
+date: 2014-04-05 17:05
 comments: true
 categories: devops oauth2
 ---
@@ -23,17 +23,27 @@ After a bit of thinking and searching around, I found [google_auth_proxy](https:
 
 The only problem is, google_oauth_proxy only works with Google oauth servers.  So, I forked it and made a new project [oauth_proxy](https://github.com/kevin1024/oauth_proxy).  oauth_proxy is intended to work with any oauth2 provider, not just google.  Since it's written in go, it compiles to a static binary that can be easily deployed.
 
+{% img /images/oauth/oauth.gif Looks pretty cool huh %}
+
 Here is an example invocation of the oauth_proxy server:
 
 ```
-/oauth_proxy --client-id="f4dddfabbebe5ba" --client-secret="ecb0561717bbf29956f" --upstream="http://localhost:8080/" --cookie-secret="secretsecret" --login-url="https://github.com/login/oauth/authorize" --redirect-url="http://localhost:4180/oauth2/callback/" --redemption-url="https://github.com/login/oauth/access_token --oauth-scope=user, --user-verification-command=/bin/verify_github_team.py"
+/oauth_proxy --client-id="f4dddfabbebe5ba" \
+--client-secret="ecb0561717bbf29956f" \
+--upstream="http://localhost:8080/" \
+--cookie-secret="secretsecret" \
+--login-url="https://github.com/login/oauth/authorize" \
+--redirect-url="http://localhost:4180/oauth2/callback/" \
+--redemption-url="https://github.com/login/oauth/access_token \
+--oauth-scope=user \
+--user-verification-command=/bin/verify_github_team.py"
 ```
 
 The client ID and client secret come from the Github oauth control panel.  Upstream points to the upstream server that I'm protecting, it should only be listening on localhost.  The cookie secret is used to sign the session cookie.  The login URL is the token generation endpoint of the oauth provider, and the redirect URL should point to the redirect url on oauth_proxy (it's always /oauth2/callback, but the hostname changes depending on your server).  Finally, the redemption URL is your oauth2 provider's token redemption URL where the code from the redirect URL gets posted and exchanged for an access token.  
 
 # Getting fancy with auth tokens
 
-Sometimes, getting an auth token from the oauth2 provider is not sufficient to gain access to your backend. For example, maybe you want to make sure that the person authenticating belongs to a specific Github organization. For this, you can create a user verification command. You can see an example script in contrib that verifies that a given access token belongs to a user in a specific organization.  In order for this script to work, I have to request the "user" scope from github.
+Sometimes, getting an auth token from the oauth2 provider is not sufficient to gain access to your backend. For example, maybe you want to make sure that the person authenticating belongs to a specific Github organization. For this, you can create a user verification command. You can see an example script in contrib that verifies that a given access token belongs to a user in a specific organization.  In order for this script to work, I have to request [the "user" scope from github](https://developer.github.com/v3/oauth/#scopes).
 
 # Notes
 
