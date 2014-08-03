@@ -51,6 +51,94 @@
 		<!-- START OF _includes/article.html -->
 <article>
 	<header>
+		<h1><a href="/blog/2014/08/03/integration-testing-flask-apps/">Integration testing Flask apps</a></h1>
+		<time>03 August 2014</time>
+	</header>
+		<div class="content">
+			<p><a href="http://pytest.org/latest/fixture.html">Pytest fixtures</a> are pretty amazing, and I end up writing quick and dirty fixtures all the time for my tests.  I just wrote a quickie pytest fixture for integration testing flask apps.  Here’s how you use it:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">import requests
+</span><span class="line">
+</span><span class="line">def test_request_tasks(server):
+</span><span class="line">    assert requests.get(server + '/tasks').status_code == 200</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Pytest will fork and run your app in another process, and you can request urls using your http library of choice (hahaha, there is <a href="http://docs.python-requests.org/en/latest/">only one correct choice</a>).</p>
+
+<p>OK, I warned you that this is quick-and-dirty, so here it is:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">@pytest.yield_fixture()
+</span><span class="line">def server():
+</span><span class="line">    PORT = 12345
+</span><span class="line">    pid = os.fork()
+</span><span class="line">    if pid == 0:
+</span><span class="line">        app.run(port=PORT)
+</span><span class="line">    else:
+</span><span class="line">        while True:
+</span><span class="line">            try:
+</span><span class="line">                requests.get('http://localhost:{0}'.format(PORT))
+</span><span class="line">                break
+</span><span class="line">            except requests.ConnectionError:
+</span><span class="line">                continue
+</span><span class="line">    yield 'http://localhost:{0}'.format(PORT)
+</span><span class="line">    os.kill(pid, signal.SIGTERM)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>A couple things to note:</p>
+
+<p>The port is just hardcoded to 12345, if you got motivated you could have the forked process bind to port 0, which will return a handy random free port, then use a pipe to communicate back to the main process and let it know the port number.  That’s WORK though.</p>
+
+<p>Also I’m using  SIGTERM to kill the process, which can actually be ignored by the process if it is feeling frisky.  So you can swap that out for SIGKILL if you run into problems.  Here’s a little more on <a href="http://major.io/2010/03/18/sigterm-vs-sigkill/">SIGKILL vs SIGTERM</a></p>
+
+<p>This method is adapted from <a href="http://www.mavenrd.com/blog/integration-testing-in-flask-1/">Matt O’Donnel’s unittest method here</a></p>
+
+
+		</div>
+	<footer>
+		
+
+
+		
+
+
+
+  
+		
+			Tagged under
+		
+    <a class='category' href='/blog/categories/pytest/'>pytest</a>, <a class='category' href='/blog/categories/python/'>python</a>, <a class='category' href='/blog/categories/testing/'>testing</a>
+	
+
+
+	
+	
+	</footer>
+	
+</article>
+<!-- END OF _includes/article.html -->
+
+	
+		
+		<!-- START OF _includes/article.html -->
+<article>
+	<header>
 		<h1><a href="/blog/2014/04/05/securing-internal-dashboards-with-oauth/">Securing Internal Dashboards with Oauth</a></h1>
 		<time>05 April 2014</time>
 	</header>
